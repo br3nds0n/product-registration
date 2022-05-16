@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+## Postgres Data Local Folder ###
+pg_data/
