@@ -3,6 +3,8 @@ package br.com.springboot.apirest.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +26,13 @@ public class ProductController {
   ProductRepository productRepository;
 
   @PostMapping("/product")
-  public Product create(@RequestBody Product product){
-    return this.productRepository.save(product);
+  public Product create(@RequestBody @Valid Product product) throws Exception {
+
+    if(product.getQuantidade() == null) { throw new Exception("Quantidade not null");} 
+    if(product.getNome() == null) { throw new Exception("Nome not null");} 
+    if(product.getValor() == null) { throw new Exception("Valor not null"); }
+    else { return this.productRepository.save(product); }
+
   }
 
   @GetMapping("/product")
@@ -39,7 +46,7 @@ public class ProductController {
   }
 
   @PutMapping("/product/{id}")
-  public Product update(@PathVariable("id") Long id, @RequestBody Product product){
+  public Product update(@PathVariable("id") Long id, @RequestBody @Valid Product product) throws Exception {
     Optional<Product> oldProduct = this.productRepository.findById(id);
 
     Product newProduct = oldProduct.get();
@@ -48,7 +55,11 @@ public class ProductController {
     newProduct.setQuantidade(product.getQuantidade());
     newProduct.setValor(product.getValor());
 
-    return this.productRepository.save(newProduct);
+    if(product.getQuantidade() == null) { throw new Exception("Quantidade not null");} 
+    if(product.getNome() == null) { throw new Exception("Nome not null");} 
+    if(product.getValor() == null) { throw new Exception("Valor not null"); }
+    else { return this.productRepository.save(newProduct); }
+    
   }
 
   @DeleteMapping("/product/{id}")
